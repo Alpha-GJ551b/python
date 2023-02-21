@@ -1,8 +1,8 @@
 import requests
 from bs4 import BeautifulSoup
 
-url = "https://www.lego.com/fr-fr"
-uri = ""
+url = "https://www.maier.fr"
+uri = "/occasions"
 page = requests.get(url + uri)
 
 # Voir le code html source
@@ -11,18 +11,15 @@ print(page.ok)
 
 if page.ok:
     soup = BeautifulSoup(page.text,'html.parser')
-    ul = soup.find("ul")
-    uls = soup.findAll("ul",{"class":"results"})
-    lis = ul.findAll("li")
+    lis = soup.findAll("article",{"class":"product"})
+
     for li in lis:
-        a =li.find("a")
-        print(a)
-        print(url + a["href"])
-        
-    print(lis)
-    print(len(uls))
-    print(soup)
-
-
-
+        a = li.find("a")
+        #print(a)
+        print(a["href"])
+    
+    #print(ul)
+    #print(lis)
+    print(len(lis))
+    #print(soup)
 
