@@ -4,8 +4,60 @@ import csv
 
 url = "https://www.maier.fr"
 uri = "/occasions"
+
+# récupere tous les liens 
+# revoi un tableau de liens 
+def getEndpoints(swoup):
+    links = []
+
+    lis = swoup.findAll("article",{"class":"product"})
+    for li in lis:
+        a = li.find("a")
+        links.append(a["href"])
+        print(a["href"])
+
+    return links
+
+#recupere les infos de la page 
+def getInfoByPage(swoup):
+    infosTriees = [swoup]
+    return infosTriees
+
+#connexion a la page 
+def swoup(url, process):
+    response = requests.get(url)
+    if response.ok:
+        soup = BeautifulSoup(response.text, 'html.parser')
+        return process(soup)
+    return []
+
+#lis le fichier CSV
+def fileReader(file):
+    result = []
+    with open(file, 'r', encoding="UTF8", newline="") as f:
+        reader = csv.DictReader(f)
+        for line in reader:
+           result.append(line) 
+    return result
+
+#ecrit fichier csv
+def fileWriter(file, fieldnames, data):
+    with open(file, 'w', encoding="UTF8", newline="") as f:
+        writer = csv.DictWriter(f, fieldnames=fieldnames)
+        writer.writeheader()
+        writer.writerows(data)
+    return fileReader(file)
+
+
+data = fileReader("links.csv")
+
+fields = ['test']
+fileWriter('infos.csv', fields, data )
+
+endpoints = swoup(url + uri,  getEndpoints)
+
+""""
 page = requests.get(url + uri)
-tabLinks = []
 
 # Voir le code html source
 print(page.ok)
@@ -48,3 +100,4 @@ if page.ok:
     print(len(lis))   
     #print(soup)
 
+"""
